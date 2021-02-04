@@ -5,8 +5,8 @@
   <h4 style="text-align: center;">WebWatch Guide</h4>
 
   <p>
-    {% for origin in origin_methods %}
-      <button onclick="location.href='/webwatch_guide?origin={{ origin }}'" type="button">{{ origin }}</button>
+    {% for epg_method in epg_methods %}
+      <button onclick="location.href='/guide?source={{ epg_method }}'" type="button">{{ epg_method }}</button>
     {% endfor %}
   </p>
 
@@ -14,7 +14,9 @@
     <table class="table-scroll">
       <thead>
         <tr>
-          <th>Play</th>
+          {% if origin in origin_methods %}
+            <th>Play</th>
+          {% endif %}
           <th>Channel Name</th>
           <th>Channel Number</th>
           <th>Channel Thumbnail</th>
@@ -30,13 +32,17 @@
       <tbody class="body-half-screen">
         {% for chan_dict in channelslist %}
           <tr>
-            <td>
-              {% if channelslist[chan_dict]["enabled"] %}
-                <a href="{{ channelslist[chan_dict]["watch_url"] }}">Play</a>
-              {% else %}
-                <a href="{{ channelslist[chan_dict]["watch_url"] }}" style="visibility:hidden">Play</a>
-              {% endif %}
-            </td>
+            {% if origin in origin_methods %}
+              <td>
+                {% if channelslist[chan_dict]["enabled"] %}
+                  <a href="{{ channelslist[chan_dict]["watch_url"] }}">Play</a>
+                  <a href="{{ chan_dict["m3u_url"] }}">M3U</a>
+                {% else %}
+                  <a href="{{ channelslist[chan_dict]["watch_url"] }}" style="visibility:hidden">Play</a>
+                  <a href="{{ chan_dict["m3u_url"] }}" style="visibility:hidden">M3U</a>
+                {% endif %}
+              </td>
+            {% endif %}
             <td>{{ channelslist[chan_dict]["name"] }}</td>
             <td>{{ channelslist[chan_dict]["number"] }}</td>
             <td><img src="{{ channelslist[chan_dict]["chan_thumbnail"] }}" alt="{{ channelslist[chan_dict]["name"] }}" width="100" height="100"></td>
