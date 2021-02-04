@@ -74,7 +74,7 @@ class WebWatch_Tuner():
                             "origin": origin,
                             "method": "webwatch",
                             "duration": duration,
-                            "origin_quality": "medium",
+                            "origin_quality": self.fhdhr.config.dict["webwatch"]["origin_quality"],
                             "transcode_quality": None,
                             "accessed": accessed_url,
                             "client": client_address,
