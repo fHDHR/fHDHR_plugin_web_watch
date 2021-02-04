@@ -6,17 +6,17 @@ import datetime
 from fHDHR.tools import channel_sort, humanized_time
 
 
-class WatchGuide_HTML():
-    endpoints = ["/webwatch_guide"]
-    endpoint_name = "page_webwatchguide_html"
+class WebWatchGuide_HTML():
+    endpoints = ["/guide", "/guide.html", "/webwatch_guide"]
+    endpoint_name = "page_guide_html"
     endpoint_access_level = 0
-    pretty_name = "Watch"
+    pretty_name = "Guide"
     endpoint_category = "pages"
 
     def __init__(self, fhdhr, plugin_utils):
         self.fhdhr = fhdhr
 
-        self.template_file = pathlib.Path(plugin_utils.config.dict["plugin_web_paths"][plugin_utils.namespace]["path"]).joinpath('webwatchguide.html')
+        self.template_file = pathlib.Path(plugin_utils.config.dict["plugin_web_paths"][plugin_utils.namespace]["path"]).joinpath('guide.html')
         self.template = StringIO()
         self.template.write(open(self.template_file).read())
 
