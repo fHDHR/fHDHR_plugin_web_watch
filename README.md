@@ -20,3 +20,13 @@ Join us in `#fHDHR <irc://irc.freenode.net/#fHDHR>`_ on Freenode.
 2) Insert this plugin into the `plugins` directory of fHDHR using `git clone` or downloading a release zip file.
 
 3) Adjust your configuration file with the below settings:
+
+````
+[webwatch]
+# ffmpeg_path =
+````
+
+
+# Developer Note
+
+This plugin is only partially working, and a proof of concept only. PRs welcome.
