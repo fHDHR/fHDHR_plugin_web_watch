@@ -7,7 +7,7 @@ from fHDHR.tools import channel_sort, humanized_time
 
 
 class WebWatchGuide_HTML():
-    endpoints = ["/guide", "/guide.html", "/webwatch_guide"]
+    endpoints = ["/guide", "/guide.html"]
     endpoint_name = "page_guide_html"
     endpoint_access_level = 0
     pretty_name = "Guide"
@@ -23,37 +23,40 @@ class WebWatchGuide_HTML():
     def __call__(self, *args):
         return self.get(*args)
 
-    def get_whats_on(self, whatson_all, fhdhr_id, origin):
-        for channel in list(whatson_all.keys()):
-            chan_obj = self.fhdhr.device.channels.get_channel_obj("origin_id", whatson_all[channel]["id"], origin)
-            if chan_obj.dict["id"] == fhdhr_id:
-                return whatson_all[channel]
-        return {}
-
     def get(self, *args):
 
         nowtime = datetime.datetime.utcnow().timestamp()
 
-        origin_methods = self.fhdhr.origins.valid_origins
-        if len(self.fhdhr.origins.valid_origins):
-            origin = request.args.get('origin', default=self.fhdhr.origins.valid_origins[0], type=str)
-            if origin not in origin_methods:
-                origin = origin_methods[0]
-            whatson_all = self.fhdhr.device.epg.whats_on_allchans(origin)
+        source = request.args.get('source', default=self.fhdhr.device.epg.def_method, type=str)
+        epg_methods = self.fhdhr.device.epg.valid_epg_methods
+        if source not in epg_methods:
+            source = self.fhdhr.device.epg.def_method
 
-            channelslist = {}
-            sorted_channel_list = channel_sort([self.fhdhr.device.channels.list[origin][x].number for x in list(self.fhdhr.device.channels.list[origin].keys())])
+        origin_methods = self.fhdhr.origins.valid_origins
+
+        channelslist = {}
+
+        if not source:
+            return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, source=source, origin_methods=origin_methods, list=list)
+
+        whatson_all = self.fhdhr.device.epg.whats_on_allchans(source)
+
+        if source in origin_methods:
+
+            sorted_channel_list = channel_sort([self.fhdhr.device.channels.list[source][x].number for x in list(self.fhdhr.device.channels.list[source].keys())])
             for channel in sorted_channel_list:
 
-                channel_obj = self.fhdhr.device.channels.get_channel_obj("number", channel, origin)
+                channel_obj = self.fhdhr.device.channels.get_channel_obj("number", channel, source)
                 channel_dict = channel_obj.dict.copy()
 
                 now_playing = whatson_all[channel]
-                current_listing = now_playing["listing"][0]
 
                 channel_dict["number"] = channel_obj.number
                 channel_dict["chan_thumbnail"] = channel_obj.thumbnail
-                channel_dict["watch_url"] = '/webwatch?channel=%s&origin=%s' % (channel_dict["id"], origin)
+                channel_dict["watch_url"] = '/webwatch?channel=%s&origin=%s' % (channel_dict["id"], source)
+                channel_dict["m3u_url"] = channel_obj.api_m3u_url
+
+                current_listing = now_playing["listing"][0]
 
                 channel_dict["listing_title"] = current_listing["title"],
                 channel_dict["listing_thumbnail"] = current_listing["thumbnail"],
@@ -75,4 +78,39 @@ class WebWatchGuide_HTML():
 
                 channelslist[channel_obj.number] = channel_dict
 
-        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, origin=origin, origin_methods=origin_methods, list=list)
+        elif source in epg_methods:
+            sorted_channel_list = channel_sort([x for x in list(whatson_all.keys())])
+
+            for channel in sorted_channel_list:
+
+                channel_dict = {
+                                "name": whatson_all[channel]["name"],
+                                "number": whatson_all[channel]["number"],
+                                "chan_thumbnail": whatson_all[channel]["thumbnail"],
+                                }
+
+                now_playing = whatson_all[channel]
+
+                current_listing = now_playing["listing"][0]
+
+                channel_dict["listing_title"] = current_listing["title"],
+                channel_dict["listing_thumbnail"] = current_listing["thumbnail"],
+                channel_dict["listing_description"] = current_listing["description"],
+
+                if current_listing["time_end"]:
+                    channel_dict["listing_remaining_time"] = humanized_time(current_listing["time_end"] - nowtime)
+                else:
+                    channel_dict["listing_remaining_time"] = "N/A"
+
+                for time_item in ["time_start", "time_end"]:
+
+                    if not current_listing[time_item]:
+                        channel_dict["listing_%s" % time_item] = "N/A"
+                    elif str(current_listing[time_item]).endswith(tuple(["+0000", "+00:00"])):
+                        channel_dict["listing_%s" % time_item] = str(current_listing[time_item])
+                    else:
+                        channel_dict["listing_%s" % time_item] = str(datetime.datetime.fromtimestamp(current_listing[time_item]))
+
+                channelslist[channel] = channel_dict
+
+        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, epg_methods=epg_methods, origin=source, origin_methods=origin_methods, list=list)

@@ -5,8 +5,8 @@
   <h4 style="text-align: center;">WebWatch Guide</h4>
 
   <p>
-    {% for origin in origin_methods %}
-      <button onclick="location.href='/webwatch_guide?origin={{ origin }}'" type="button">{{ origin }}</button>
+    {% for epg_method in epg_methods %}
+      <button onclick="location.href='/guide?source={{ epg_method }}'" type="button">{{ epg_method }}</button>
     {% endfor %}
   </p>
 
@@ -14,7 +14,7 @@
     <table class="table-scroll">
       <thead>
         <tr>
-          {% if origin in fhdhr.origins.valid_origins %}
+          {% if origin in origin_methods %}
             <th>Play</th>
           {% endif %}
           <th>Channel Name</th>
@@ -32,7 +32,7 @@
       <tbody class="body-half-screen">
         {% for chan_dict in channelslist %}
           <tr>
-            {% if origin in fhdhr.origins.valid_origins %}
+            {% if origin in origin_methods %}
               <td>
                 {% if channelslist[chan_dict]["enabled"] %}
                   <a href="{{ channelslist[chan_dict]["watch_url"] }}">Play</a>
