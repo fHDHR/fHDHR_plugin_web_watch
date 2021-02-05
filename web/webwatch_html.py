@@ -65,4 +65,17 @@ class Watch_HTML():
 
             watch_url = '/api/webwatch?method=stream&channel=%s&origin=%s' % (channel_id, origin)
 
-        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, watch_url=watch_url)
+            whatson = self.fhdhr.device.epg.whats_on_now(chan_obj.number, origin, chan_obj=chan_obj)
+
+            channel_dict = chan_obj.dict.copy()
+
+            channel_dict["number"] = chan_obj.number
+            channel_dict["chan_thumbnail"] = chan_obj.thumbnail
+
+            current_listing = whatson["listing"][0]
+
+            channel_dict["listing_title"] = current_listing["title"]
+            channel_dict["listing_thumbnail"] = current_listing["thumbnail"]
+            channel_dict["listing_description"] = current_listing["description"]
+
+        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, watch_url=watch_url, channel_dict=channel_dict)
