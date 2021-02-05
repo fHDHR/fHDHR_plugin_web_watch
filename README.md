@@ -29,4 +29,6 @@ Join us in `#fHDHR <irc://irc.freenode.net/#fHDHR>`_ on Freenode.
 
 # Developer Note
 
-This plugin is only partially working, and a proof of concept only. PRs welcome.
+This plugin Orerwrites the normal Guide page, includes all original functionality, but also provides a method to stream content in the browser.
+
+This was made as a plugin, instead of being included in core, due to its dependency on ffmpeg.
