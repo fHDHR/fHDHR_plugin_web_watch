@@ -37,7 +37,7 @@ class WebWatchGuide_HTML():
         channelslist = {}
 
         if not source:
-            return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, source=source, origin_methods=origin_methods, list=list)
+            return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, epg_methods=epg_methods, origin=source, origin_methods=origin_methods, list=list)
 
         whatson_all = self.fhdhr.device.epg.whats_on_allchans(source)
 
