@@ -77,7 +77,7 @@ class WebWatchGuide_HTML():
                                 "listing_description": now_playing["description"],
                                 }
 
-                channel_dict["watch_url"] = '/webwatch?channel=%s&origin=%s' % (channel_dict["id"], source)
+                channel_dict["watch_url"] = '/webwatch?channel=%s&origin=%s' % (channel_obj.dict["id"], source)
 
                 if now_playing["time_end"]:
                     channel_dict["listing_remaining_time"] = humanized_time(now_playing["time_end"] - nowtime)
@@ -129,6 +129,6 @@ class WebWatchGuide_HTML():
                 channel_dict["chan_match"]["name"] = chan_obj.dict["name"]
                 channel_dict["m3u_url"] = chan_obj.api_m3u_url
                 channel_dict["enabled"] = chan_obj.enabled
-                channel_dict["watch_url"] = '/webwatch?channel=%s&origin=%s' % (channel_dict["id"], source)
+                channel_dict["watch_url"] = '/webwatch?channel=%s&origin=%s' % (chan_obj.dict["id"], source)
 
         return channel_dict, channel
