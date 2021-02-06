@@ -38,7 +38,7 @@ class WebWatchGuide_HTML():
         unmatched_origins = {}
 
         if not source:
-            return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, epg_methods=epg_methods, origin=source, origin_methods=origin_methods, list=list)
+            return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, epg_methods=epg_methods, origin=source, origin_methods=origin_methods, unmatched_origins=unmatched_origins, list=list)
 
         whatson_all = self.fhdhr.device.epg.whats_on_allchans(source)
 
@@ -56,7 +56,7 @@ class WebWatchGuide_HTML():
 
             channelslist[channel_number] = channel_dict
 
-        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, epg_methods=epg_methods, origin=source, origin_methods=origin_methods, list=list)
+        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, channelslist=channelslist, epg_methods=epg_methods, origin=source, origin_methods=origin_methods, unmatched_origins=unmatched_origins, list=list)
 
     def create_channeldict(self, source, origin_methods, epg_methods, whatson_all, nowtime, channel):
         now_playing = whatson_all[channel]["listing"][0]
