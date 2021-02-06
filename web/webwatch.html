@@ -14,6 +14,7 @@
     <table class="table-scroll">
       <thead>
         <tr>
+          <th>Channel Guide</th>
           <th>Channel Name</th>
           <th>Channel Number</th>
           <th>Channel Thumbnail</th>
@@ -24,14 +25,17 @@
       </thead>
 
       <tbody class="body-half-screen">
-        <tr>
-          <td>{{ channel_dict["name"] }}</td>
-          <td>{{ channel_dict["number"] }}</td>
-          <td><img src="{{ channel_dict["chan_thumbnail"] }}" alt="{{ channel_dict["name"] }}" width="100" height="100"></td>
-          <td>{{ channel_dict["listing_title"] }}</td>
-          <td><img src="{{ channel_dict["listing_thumbnail"] }}" alt="{{ channel_dict["listing_title"] }}" width="100" height="100"></td>
-          <td>{{ channel_dict["listing_description"] }}</td>
-        </tr>
+        {% for channel_dict in channel_list %}
+          <tr>
+            <td>{{ channel_dict["epg_method"] }}</td>
+            <td>{{ channel_dict["name"] }}</td>
+            <td>{{ channel_dict["number"] }}</td>
+            <td><img src="{{ channel_dict["chan_thumbnail"] }}" alt="{{ channel_dict["name"] }}" width="100" height="100"></td>
+            <td>{{ channel_dict["listing_title"] }}</td>
+            <td><img src="{{ channel_dict["listing_thumbnail"] }}" alt="{{ channel_dict["listing_title"] }}" width="100" height="100"></td>
+            <td>{{ channel_dict["listing_description"] }}</td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>

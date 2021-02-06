@@ -67,15 +67,33 @@ class Watch_HTML():
 
             whatson = self.fhdhr.device.epg.whats_on_now(chan_obj.number, origin, chan_obj=chan_obj)
 
-            channel_dict = chan_obj.dict.copy()
+            channel_list = []
 
-            channel_dict["number"] = chan_obj.number
-            channel_dict["chan_thumbnail"] = chan_obj.thumbnail
+            channel_list.append({
+                                "epg_method": chan_obj.origin,
+                                "number": chan_obj.number,
+                                "name": chan_obj.dict["name"],
+                                "chan_thumbnail": chan_obj.thumbnail,
+                                "listing_title": whatson["listing"][0]["title"],
+                                "listing_thumbnail": whatson["listing"][0]["thumbnail"],
+                                "listing_description": whatson["listing"][0]["description"]
+                                })
 
-            current_listing = whatson["listing"][0]
+            for epg_method in self.fhdhr.device.epg.valid_epg_methods:
+                epg_chan_matches = self.fhdhr.db.get_fhdhr_value("epg_channels", "list", epg_method) or {}
+                epg_id = [x for x in list(epg_chan_matches.keys()) if epg_chan_matches[x]["fhdhr_id"] == chan_obj.dict["id"]]
+                if len(epg_id):
+                    whatson_all = self.fhdhr.device.epg.whats_on_allchans(epg_method)
+                    whatson = [whatson_all[x] for x in list(whatson_all.keys()) if whatson_all[x]["id"] == epg_id[0]]
+                    if len(whatson):
+                        channel_list.append({
+                                            "epg_method": epg_method,
+                                            "number": chan_obj.number,
+                                            "name": chan_obj.dict["name"],
+                                            "chan_thumbnail": chan_obj.thumbnail,
+                                            "listing_title": whatson[0]["listing"][0]["title"],
+                                            "listing_thumbnail": whatson[0]["listing"][0]["thumbnail"],
+                                            "listing_description": whatson[0]["listing"][0]["description"]
+                                            })
 
-            channel_dict["listing_title"] = current_listing["title"]
-            channel_dict["listing_thumbnail"] = current_listing["thumbnail"]
-            channel_dict["listing_description"] = current_listing["description"]
-
-        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, watch_url=watch_url, channel_dict=channel_dict)
+        return render_template_string(self.template.getvalue(), request=request, session=session, fhdhr=self.fhdhr, watch_url=watch_url, channel_list=channel_list)
