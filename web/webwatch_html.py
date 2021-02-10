@@ -11,7 +11,7 @@ class Watch_HTML():
     def __init__(self, fhdhr, plugin_utils):
         self.fhdhr = fhdhr
 
-        self.template_file = pathlib.Path(plugin_utils.config.dict["plugin_web_paths"][plugin_utils.namespace]["path"]).joinpath('webwatch.html')
+        self.template_file = pathlib.Path(plugin_utils.path).joinpath('webwatch.html')
         self.template = StringIO()
         self.template.write(open(self.template_file).read())
 
