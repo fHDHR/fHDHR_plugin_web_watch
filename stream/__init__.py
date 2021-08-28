@@ -9,12 +9,12 @@ def setup(plugin, versions):
 
     # Check config for ffmpeg path
     ffmpeg_path = None
-    if plugin.config.dict["webwatch"]["ffmpeg_path"]:
+    if plugin.config.dict["ffmpeg"]["path"]:
         # verify path is valid
-        if os.path.isfile(plugin.config.dict["webwatch"]["ffmpeg_path"]):
-            ffmpeg_path = plugin.config.dict["webwatch"]["ffmpeg_path"]
+        if os.path.isfile(plugin.config.dict["ffmpeg"]["path"]):
+            ffmpeg_path = plugin.config.dict["ffmpeg"]["path"]
         else:
-            plugin.logger.warning("Failed to find ffmpeg at %s." % plugin.config.dict["webwatch"]["ffmpeg_path"])
+            plugin.logger.warning("Failed to find ffmpeg at %s." % plugin.config.dict["ffmpeg"]["path"])
 
     if not ffmpeg_path:
         plugin.logger.info("Attempting to find ffmpeg in PATH.")
@@ -34,7 +34,7 @@ def setup(plugin, versions):
             ffmpeg_path = None
 
         if ffmpeg_path:
-            plugin.config.dict["webwatch"]["ffmpeg_path"] = ffmpeg_path
+            plugin.config.dict["ffmpeg"]["path"] = ffmpeg_path
 
     if ffmpeg_path:
         ffmpeg_command = [ffmpeg_path, "-version", "pipe:stdout"]
@@ -65,7 +65,7 @@ class Plugin_OBJ():
         self.stream_args = stream_args
         self.tuner = tuner
 
-        if self.plugin_utils.config.internal["versions"]["ffmpeg"]["version"] == "Missing":
+        if self.plugin_utils.versions.dict["ffmpeg"]["version"] == "Missing":
             raise TunerError("806 - Tune Failed: FFMPEG Missing")
 
         self.bytes_per_read = 1024
