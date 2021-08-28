@@ -54,7 +54,7 @@ def setup(plugin, versions):
         ffmpeg_version = "Missing"
         plugin.logger.warning("Failed to find ffmpeg.")
 
-    versions.register_version("ffmpeg", ffmpeg_version, "env")
+    versions.register_version("webwatch_ffmpeg", ffmpeg_version, "env")
 
 
 class Plugin_OBJ():
@@ -65,7 +65,7 @@ class Plugin_OBJ():
         self.stream_args = stream_args
         self.tuner = tuner
 
-        if self.plugin_utils.config.internal["versions"]["ffmpeg"]["version"] == "Missing":
+        if self.plugin_utils.versions.dict["webwatch_ffmpeg"]["version"] == "Missing":
             raise TunerError("806 - Tune Failed: FFMPEG Missing")
 
         self.bytes_per_read = 1024
