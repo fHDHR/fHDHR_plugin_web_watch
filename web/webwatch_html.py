@@ -33,10 +33,12 @@ class Watch_HTML():
 
             if origin:
 
-                if str(channel_number) in [str(x) for x in self.fhdhr.device.channels.get_channel_list("number", origin)]:
-                    chan_obj = self.fhdhr.device.channels.get_channel_obj("number", channel_number, origin)
-                elif str(channel_number) in [str(x) for x in self.fhdhr.device.channels.get_channel_list("id", origin)]:
-                    chan_obj = self.fhdhr.device.channels.get_channel_obj("id", channel_number, origin)
+                if str(channel_number) in [str(x) for x in self.fhdhr.origins[origin].channels.create_channel_list("id")]:
+                    chan_obj = self.fhdhr.origins[origin].channels.find_channel_obj(channel_number, "id")
+
+                elif str(channel_number) in [str(x) for x in self.fhdhr.origins[origin].channels.create_channel_list("number")]:
+                    chan_obj = self.fhdhr.origins[origin].channels.find_channel_obj(channel_number, "number")
+
                 else:
                     response = Response("Not Found", status=404)
                     response.headers["X-fHDHR-Error"] = "801 - Unknown Channel"
