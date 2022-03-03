@@ -26,7 +26,7 @@ class WebWatch_Tuner():
         duration = request.args.get('duration', default=0, type=int)
         transcode_quality = request.args.get('transcode', default=None, type=str)
 
-        origin_methods = self.fhdhr.origins.valid_origins
+        origin_methods = self.fhdhr.origins.list_origins
         origin = request.args.get('origin', default=None, type=str)
         if origin and origin not in origin_methods:
             return "%s Invalid channels origin" % origin

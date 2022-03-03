@@ -22,8 +22,8 @@ class Watch_HTML():
 
         watch_url = None
 
-        origin_methods = self.fhdhr.origins.valid_origins
-        if len(self.fhdhr.origins.valid_origins):
+        origin_methods = self.fhdhr.origins.list_origins
+        if self.fhdhr.origins.count_origins:
 
             channel_number = request.args.get('channel', None, type=str)
             if not channel_number:

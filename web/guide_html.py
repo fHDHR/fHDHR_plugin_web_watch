@@ -32,7 +32,7 @@ class WebWatchGuide_HTML():
         if source not in epg_methods:
             source = self.fhdhr.device.epg.def_method
 
-        origin_methods = self.fhdhr.origins.valid_origins
+        origin_methods = self.fhdhr.origins.list_origins
 
         channelslist = {}
         unmatched_origins = {}
