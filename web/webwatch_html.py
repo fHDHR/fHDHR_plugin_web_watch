@@ -33,11 +33,11 @@ class Watch_HTML():
 
             if origin:
 
-                if str(channel_number) in [str(x) for x in self.fhdhr.origins[origin].channels.create_channel_list("id")]:
-                    chan_obj = self.fhdhr.origins[origin].channels.find_channel_obj(channel_number, "id")
+                if str(channel_number) in [str(x) for x in self.fhdhr.origins.origins_dict[origin].channels.create_channel_list("id")]:
+                    chan_obj = self.fhdhr.origins.origins_dict[origin].channels.find_channel_obj(channel_number, "id")
 
-                elif str(channel_number) in [str(x) for x in self.fhdhr.origins[origin].channels.create_channel_list("number")]:
-                    chan_obj = self.fhdhr.origins[origin].channels.find_channel_obj(channel_number, "number")
+                elif str(channel_number) in [str(x) for x in self.fhdhr.origins.origins_dict[origin].channels.create_channel_list("number")]:
+                    chan_obj = self.fhdhr.origins.origins_dict[origin].channels.find_channel_obj(channel_number, "number")
 
                 else:
                     response = Response("Not Found", status=404)
@@ -47,8 +47,8 @@ class Watch_HTML():
 
             else:
 
-                if str(channel_number) in [str(x) for x in self.fhdhr.device.channels.get_channel_list("id")]:
-                    chan_obj = self.fhdhr.device.channels.get_channel_obj("id", channel_number)
+                if str(channel_number) in [str(x) for x in self.fhdhr.origins.get_channel_list("id")]:
+                    chan_obj = self.fhdhr.origins.get_channel_obj("id", channel_number)
                 else:
                     response = Response("Not Found", status=404)
                     response.headers["X-fHDHR-Error"] = "801 - Unknown Channel"
