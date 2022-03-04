@@ -32,7 +32,7 @@ class WebWatchGuide_HTML():
         if source not in epg_methods:
             source = self.fhdhr.device.epg.def_method
 
-        origin_methods = self.fhdhr.origins.valid_origins
+        origin_methods = self.fhdhr.origins.list_origins
 
         channelslist = {}
         unmatched_origins = {}
@@ -62,7 +62,7 @@ class WebWatchGuide_HTML():
         now_playing = whatson_all[channel]["listing"][0]
 
         if source in origin_methods:
-            channel_obj = self.fhdhr.device.channels.get_channel_obj("origin_id", whatson_all[channel]["id"], source)
+            channel_obj = self.fhdhr.origins[source].channels.find_channel_obj(whatson_all[channel]["id"], "origin_id")
             if channel_obj:
 
                 channel_dict = {
@@ -124,7 +124,7 @@ class WebWatchGuide_HTML():
         if source in epg_methods:
             channel_dict["chan_match"] = self.fhdhr.device.epg.get_epg_chan_match(source, whatson_all[channel]["id"])
             if channel_dict["chan_match"]:
-                chan_obj = self.fhdhr.device.channels.get_channel_obj("id", channel_dict["chan_match"]["fhdhr_id"], channel_dict["chan_match"]["origin"])
+                chan_obj = self.fhdhr.origins[source].channels.find_channel_obj(channel_dict["chan_match"]["fhdhr_id"], "id")
                 channel_dict["chan_match"]["number"] = chan_obj.number
                 channel_dict["chan_match"]["name"] = chan_obj.dict["name"]
                 channel_dict["m3u_url"] = chan_obj.api_m3u_url
