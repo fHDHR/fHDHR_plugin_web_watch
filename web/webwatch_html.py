@@ -16,9 +16,9 @@ class Watch_HTML():
         self.template.write(open(self.template_file).read())
 
     def __call__(self, *args):
-        return self.get(*args)
+        return self.handler(*args)
 
-    def get(self, *args):
+    def handler(self, *args):
 
         watch_url = None
 
