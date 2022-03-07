@@ -15,9 +15,9 @@ class WebWatch_Tuner():
         self.fhdhr = fhdhr
 
     def __call__(self, *args):
-        return self.get(*args)
+        return self.handler(*args)
 
-    def get(self, *args):
+    def handler(self, *args):
 
         accessed_url = urllib.parse.quote(request.url)
 

@@ -3,7 +3,7 @@ import datetime
 import pathlib
 from io import StringIO
 
-from fHDHR.tools import channel_sort, humanized_time
+from fHDHR.tools import channel_sort
 
 
 class WebWatchGuide_HTML():
@@ -21,9 +21,9 @@ class WebWatchGuide_HTML():
         self.template.write(open(self.template_file).read())
 
     def __call__(self, *args):
-        return self.get(*args)
+        return self.handler(*args)
 
-    def get(self, *args):
+    def handler(self, *args):
 
         nowtime = datetime.datetime.utcnow().timestamp()
 
@@ -80,7 +80,7 @@ class WebWatchGuide_HTML():
                 channel_dict["watch_url"] = '/webwatch?channel=%s&origin=%s' % (channel_obj.dict["id"], channel_obj.origin)
 
                 if now_playing["time_end"]:
-                    channel_dict["listing_remaining_time"] = humanized_time(now_playing["time_end"] - nowtime)
+                    channel_dict["listing_remaining_time"] = self.fhdhr.time.humanized_time(now_playing["time_end"] - nowtime)
                 else:
                     channel_dict["listing_remaining_time"] = "N/A"
 
@@ -108,7 +108,7 @@ class WebWatchGuide_HTML():
         channel_dict["watch_url"] = None
 
         if now_playing["time_end"]:
-            channel_dict["listing_remaining_time"] = humanized_time(now_playing["time_end"] - nowtime)
+            channel_dict["listing_remaining_time"] = self.fhdhr.time.humanized_time(now_playing["time_end"] - nowtime)
         else:
             channel_dict["listing_remaining_time"] = "N/A"
 
@@ -124,7 +124,7 @@ class WebWatchGuide_HTML():
         if source in epg_methods:
             channel_dict["chan_match"] = self.fhdhr.device.epg.get_epg_chan_match(source, whatson_all[channel]["id"])
             if channel_dict["chan_match"]:
-                chan_obj = self.fhdhr.origins.origins_dict[source].channels.find_channel_obj(channel_dict["chan_match"]["fhdhr_id"], "id")
+                chan_obj = self.fhdhr.origins.origins_dict[source].channels.find_channel_obj(channel_dict["chan_match"]["fhdhr_channel_id"], "id")
                 channel_dict["chan_match"]["number"] = chan_obj.number
                 channel_dict["chan_match"]["name"] = chan_obj.dict["name"]
                 channel_dict["m3u_url"] = chan_obj.api_m3u_url

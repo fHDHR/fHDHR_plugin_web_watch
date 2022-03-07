@@ -16,9 +16,9 @@ class Watch_HTML():
         self.template.write(open(self.template_file).read())
 
     def __call__(self, *args):
-        return self.get(*args)
+        return self.handler(*args)
 
-    def get(self, *args):
+    def handler(self, *args):
 
         watch_url = None
 
@@ -83,7 +83,7 @@ class Watch_HTML():
 
             for epg_method in self.fhdhr.device.epg.valid_epg_methods:
                 epg_chan_matches = self.fhdhr.db.get_fhdhr_value("epg_channels", "list", epg_method) or {}
-                epg_id = [x for x in list(epg_chan_matches.keys()) if epg_chan_matches[x]["fhdhr_id"] == chan_obj.dict["id"]]
+                epg_id = [x for x in list(epg_chan_matches.keys()) if epg_chan_matches[x]["fhdhr_channel_id"] == chan_obj.dict["id"]]
                 if len(epg_id):
                     whatson_all = self.fhdhr.device.epg.whats_on_allchans(epg_method)
                     whatson = [whatson_all[x] for x in list(whatson_all.keys()) if whatson_all[x]["id"] == epg_id[0]]
